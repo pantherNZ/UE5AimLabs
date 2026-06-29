@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayTagAssetInterface.h"
+
 #include "TaggedActor.generated.h"
 
 UCLASS()
-class AIMLABSUE5_API ATaggedActor : public AActor
+class AIMLABSUE5_API ATaggedActor : public AActor, public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 	
@@ -23,4 +25,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "GameplayTags" )
+	FGameplayTagContainer GameplayTags;
+
+	virtual void GetOwnedGameplayTags( FGameplayTagContainer& TagContainer ) const override { TagContainer = GameplayTags; }
+
+	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
+	void AddTag(FGameplayTag TagToAdd)
+	{
+		GameplayTags.AddTag(TagToAdd);
+	}
 };
